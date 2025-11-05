@@ -1,0 +1,52 @@
+/* InputField.module.css */
+
+/* O container que segura label, input e erro */
+.wrapper {
+  margin-block-end: var(--space-m); /* Substitui o 'mb-3' */
+}
+
+/* O <label> */
+.label {
+  display: block; /* Importante para o margin-block-end funcionar */
+  font-weight: 600;
+  color: var(--clr-text-secondary);
+  margin-block-end: var(--space-xs);
+}
+
+/* O <input> principal */
+.input {
+  display: block;
+  width: 100%;
+  padding: var(--space-s) var(--space-m);
+  font-size: var(--fs-400);
+  line-height: var(--line-height-body);
+  color: var(--clr-text-primary);
+  background-color: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--border-radius-medium);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Estilo de foco (usa a variável de acessibilidade do global) */
+.input:focus-visible {
+  border-color: var(--clr-primary-400);
+  box-shadow: 0 0 0 3px hsla(
+    var(--clr-primary-400-hsl), 
+    0.2
+  );
+  /* Se não tiver HSL, use o outline: */
+  /* outline: 3px solid var(--clr-primary-400); */
+  /* outline-offset: 2px; */
+}
+
+/* Classe de erro para ser ADICIONADA ao .input */
+.isInvalid {
+  border-color: var(--clr-danger-400, #ef4444); /* Fallback vermelho */
+}
+
+/* A mensagem de texto de erro */
+.errorMessage {
+  color: var(--clr-danger-400, #ef4444);
+  font-size: var(--fs-300);
+  margin-block-start: var(--space-xs);
+}
