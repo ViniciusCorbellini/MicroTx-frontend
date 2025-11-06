@@ -29,7 +29,7 @@ function NavBar() {
           <Nav>
             {isAuthenticated ? (
               // Menu para usuário LOGADO
-              <NavDropdown title={`Olá, ${user?.name || 'Usuário'}`} id="basic-nav-dropdown">
+              <NavDropdown title={`Olá, ${user?.nome || 'Usuário'}`} id="basic-nav-dropdown">
                 <NavDropdown.Item as={Link} to="/profile">
                   Perfil
                 </NavDropdown.Item>

@@ -9,27 +9,42 @@ const AuthContext = createContext(null);
 // Criando o Provedor (Provider)
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Efeito para verificar se já existe um usuário no localStorage ao carregar a app
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser && storedUser !== 'undefined' && storedUser !== 'null') {
+    // Essa função roda apenas uma vez, quando o provider é montado
+    const loadUserFromStorage = () => {
       try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Falha ao carregar usuário do localStorage:", error);
+        const userJSON = localStorage.getItem('user');
+        const token = localStorage.getItem('token');
 
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
+        if (userJSON && token) {
+          setUser(JSON.parse(userJSON));
+          setIsAuthenticated(true);
+          // TODO: validar token aqui
+        }
+      } catch (error) {
+        console.error('Falha ao carregar usuário do storage', error);
+        localStorage.clear();
+
+        setIsAuthenticated(false);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
-    }
-  }, []);
+    };
+
+    loadUserFromStorage();
+  }, []); // O array vazio [] garante que isso rode só na montagem
 
   // Função de login
   const login = (userData, token) => {
     localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', token);
     setUser(userData);
+    setIsAuthenticated(true);
   };
 
   // Função de logout
@@ -37,13 +52,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     setUser(null);
+    setIsAuthenticated(false);
   };
-
-  const isAuthenticated = !!user;
 
   const value = {
     user,
     isAuthenticated,
+    isLoading,
     login,
     logout,
   };
@@ -51,8 +66,11 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Criando um Hook customizado para usar o contexto
 // useAuth: É um hook que nos dará acesso fácil a user, isAuthenticated, login e logout em qualquer componente.
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+  }
+  return context;
 };

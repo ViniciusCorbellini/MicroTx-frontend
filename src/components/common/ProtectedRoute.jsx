@@ -1,16 +1,21 @@
 // src/components/common/ProtectedRoute.jsx
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Ajuste o caminho se necessário
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
 
-  if (!isAuthenticated) {
-    // Se não estiver autenticado, redireciona para a página de login
-    return <Navigate to="/login" replace />;
+  if (isLoading) {
+    return <p>Carregando...</p>;
   }
 
-  // Se estiver autenticado, renderiza o componente filho (a página)
+  // Se não estiver autenticado, redireciona para a página de login
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Se estiver autenticadoe o loading terminou, renderiza o componente filho (a pg protegida)
   return children;
 };
 
