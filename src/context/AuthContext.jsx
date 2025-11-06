@@ -13,8 +13,15 @@ export const AuthProvider = ({ children }) => {
   // Efeito para verificar se já existe um usuário no localStorage ao carregar a app
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (storedUser && storedUser !== 'undefined' && storedUser !== 'null') {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Falha ao carregar usuário do localStorage:", error);
+
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
     }
   }, []);
 
