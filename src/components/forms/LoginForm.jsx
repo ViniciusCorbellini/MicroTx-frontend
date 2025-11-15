@@ -31,15 +31,14 @@ export default function LoginForm() {
 
         try {
             //faz a chamada a API do backend
-            const { user, token } = await authService.login(formData.email, formData.senha);
+            const data = await authService.login(formData.email, formData.senha);
 
-            login(user, token);
+            login(data);
 
             // Redireciona para o Dashboard
-            navigate('/'); //TODO: corrigir lógica pra voltar corretamente ao dashboard
+            navigate('/'); 
 
         } catch (err) {
-            // Se a API retornar um erro
             console.error("Erro no login:", err);
             setError('Email ou senha inválidos.'); // Mostra um erro genérico
         }

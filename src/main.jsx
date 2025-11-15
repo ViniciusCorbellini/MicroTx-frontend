@@ -1,4 +1,10 @@
 // src/main.jsx
+
+//Api
+import api from './api/api.js';
+import './api/interceptorConfig.js'
+
+// React
 import React from 'react';
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
