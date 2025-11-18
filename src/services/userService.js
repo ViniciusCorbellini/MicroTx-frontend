@@ -5,10 +5,24 @@ const userService = {
   /**
    * Busca a lista de posts recomendados para o usuário logado.
    */
-  getRecommendations: async () => {
+  getPostRecommendations: async () => {
     try {
       const response = await api.get('/recommendations/posts'); 
-      return response.data;
+      console.log(response.data)
+      return response.data.content;
+    } catch (error) {
+      throw error.response?.data || new Error('Erro ao buscar recomendações');
+    }
+  },
+
+  /**
+   * Busca a lista de usuários recomendados para o usuário logado.
+   */
+  getUserRecommendations: async () => {
+    try {
+      const response = await api.get('/recommendations/users'); 
+      console.log(response.data)
+      return response.data.content;
     } catch (error) {
       throw error.response?.data || new Error('Erro ao buscar recomendações');
     }

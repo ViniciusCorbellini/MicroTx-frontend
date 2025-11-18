@@ -5,7 +5,7 @@ import { ListGroup, Spinner, Alert } from 'react-bootstrap';
 import Button from '../common/Button';
 
 export default function Recommendations() {
-  const { data: users, loading, error } = useFetch(userService.getRecommendations);
+  const { data: users, loading, error } = useFetch(userService.getUserRecommendations);
 
   // Estado de Carregamento
   if (loading) {
