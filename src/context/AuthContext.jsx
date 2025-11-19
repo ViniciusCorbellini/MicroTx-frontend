@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }) => {
 		const userToStore = {
 			id: data.id,
 			nome: data.nome,
+			fotoPerfil: data.fotoPerfil,
 			email: data.email
 		};
 
