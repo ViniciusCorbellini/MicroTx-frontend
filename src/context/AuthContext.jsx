@@ -72,6 +72,14 @@ export const AuthProvider = ({ children }) => {
 		setIsAuthenticated(true);
 	};
 
+	const updateUser = (newUserData) => {
+		// Atualiza o estado do user
+		setUser(prev => ({ ...prev, ...newUserData }));
+
+		// Atualiza o usuario no localStorage 
+		localStorage.setItem('user', JSON.stringify(newUserData));
+	};
+
 	// Função de logout
 	const logout = () => {
 		localStorage.removeItem('user');
@@ -86,6 +94,7 @@ export const AuthProvider = ({ children }) => {
 		isLoading,
 		login,
 		logout,
+		updateUser
 	};
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

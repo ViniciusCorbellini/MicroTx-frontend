@@ -16,7 +16,7 @@ function NavBar() {
   const userTitle = (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
-        src={getImageUrl(user.fotoPerfil)} // Fallback se não houver foto
+        src={getImageUrl(user?.fotoPerfil)} 
         alt="Foto de perfil"
         style={{
           width: '32px',
