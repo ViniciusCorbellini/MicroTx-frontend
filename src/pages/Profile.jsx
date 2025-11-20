@@ -14,8 +14,6 @@ export default function Profile() {
 
   if (!user) return <p>Carregando...</p>;
 
-  console.log(user.foto)
-
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">

@@ -2,6 +2,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
+import { getImageUrl } from '../utils/imageHelper';
 
 function NavBar() {
   const { isAuthenticated, logout, user } = useAuth();
@@ -12,13 +13,30 @@ function NavBar() {
     navigate('/login');
   };
 
+  const userTitle = (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src={getImageUrl(user.fotoPerfil)} // Fallback se não houver foto
+        alt="Foto de perfil"
+        style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%', // Deixa redonda
+          objectFit: 'cover',  // Evita que a imagem fique esticada
+          marginRight: '8px'   // Espaço entre a foto e o texto
+        }}
+      />
+      <span>Olá, {user?.nome || 'Usuário'}</span>
+    </div>
+  );
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="mb-3">
       <Container>
         <Navbar.Brand as={Link} to="/">MicroTx</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-        
+
           <Nav className="me-auto">
             {/* Só mostra o link do Dashboard se o usuário estiver logado */}
             {isAuthenticated && (
@@ -29,7 +47,7 @@ function NavBar() {
           <Nav>
             {isAuthenticated ? (
               // Menu para usuário LOGADO
-              <NavDropdown title={`Olá, ${user?.nome || 'Usuário'}`} id="basic-nav-dropdown">
+              <NavDropdown title={userTitle} id="basic-nav-dropdown">
                 <NavDropdown.Item as={Link} to="/profile">
                   Perfil
                 </NavDropdown.Item>
@@ -46,7 +64,7 @@ function NavBar() {
               </>
             )}
           </Nav>
-        
+
         </Navbar.Collapse>
       </Container>
     </Navbar>
