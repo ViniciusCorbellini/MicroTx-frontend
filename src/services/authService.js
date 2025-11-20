@@ -12,13 +12,13 @@ const authService = {
     },
 
     // Envia dados cadastrais para a rota de register do backend
-    register: async (userData) => {
+    register: async (formData) => {
         try {
-            const response = await api.post('/auth/register', userData);
+            const response = await api.post('/auth/register', formData);
             return response.data
         } catch (error) {
             console.log(error)
-            throw error.response?.data || new Error('Erro ao tentar fazer login');
+            throw error.response?.data || new Error('Erro ao tentar fazer cadastro');
         }
     },
 

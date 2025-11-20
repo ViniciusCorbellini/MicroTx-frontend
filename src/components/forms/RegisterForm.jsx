@@ -18,11 +18,18 @@ export default function RegisterForm() {
   });
 
   const [error, setError] = useState('');
+  const [foto, setFoto] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setFoto(e.target.files[0]);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -36,8 +43,23 @@ export default function RegisterForm() {
     }
 
     try {
-      const { nome, email, senhaHash } = formData;
-      await authService.register({ nome, email, senhaHash });
+      const sendData = new FormData();
+
+      const userDto = {
+        nome: formData.nome,
+        email: formData.email,
+        senhaHash: formData.senhaHash
+      };
+
+      sendData.append('user', new Blob([JSON.stringify(userDto)], {
+        type: 'application/json'
+      }));
+
+      if (foto) {
+        sendData.append('foto', foto);
+      }
+
+      await authService.register(sendData);
 
       // Se o cadastro foi um sucesso, redireciona o usuário para o login
       alert('Cadastro realizado com sucesso! Faça seu login.');
@@ -82,6 +104,15 @@ export default function RegisterForm() {
           value={formData.confirmarSenha}
           onChange={handleChange}
         />
+        <div className="mb-3">
+          <label className="form-label">Foto de Perfil (Opcional)</label>
+          <input
+            type="file"
+            className="form-control"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+        </div>
         <div className="mt-4">
           <Button type="submit">
             Cadastrar
