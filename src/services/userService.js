@@ -115,8 +115,19 @@ const userService = {
     getUserPosts: async (id) => {
         // /posts/usuario/{usuarioId}/paginado
         const response = await api.get(`/posts/usuario/${id}/paginado`);
-        
+
         return response.data.content;
+    },
+
+    /**
+     * Busca usuários por nome
+     */
+    searchUsers: async (name) => {
+        if (!name) return [];
+        const response = await api.get('/usuarios/nome', {
+            params: { nome: name }
+        });
+        return response.data;
     },
 };
 
