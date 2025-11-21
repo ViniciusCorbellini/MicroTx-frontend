@@ -63,7 +63,7 @@ const userService = {
         try {
             // null para o body
             const response = await api.post(`/seguidores/seguir`, null, {
-                params: {seguidoId}
+                params: { seguidoId }
             });
             return response.data;
         } catch (error) {
@@ -78,7 +78,7 @@ const userService = {
     unfollowUser: async (seguidoId) => {
         try {
             const response = await api.delete(`/seguidores/deixar-de-seguir`, {
-                params: {seguidoId}
+                params: { seguidoId }
             });
             return response.data;
         } catch (error) {
@@ -99,6 +99,24 @@ const userService = {
             console.error(`Erro ao verificar status de seguidor para id ${seguidoId}`, error);
             return false; // Em caso de erro, assumirei que o user não segue
         }
+    },
+
+    /**
+     * Busca os dados públicos de um usuário pelo ID
+     */
+    getUserById: async (id) => {
+        const response = await api.get(`/usuarios/${id}`);
+        return response.data;
+    },
+
+    /**
+     * Busca os posts de um usuário específico
+     */
+    getUserPosts: async (id) => {
+        // /posts/usuario/{usuarioId}/paginado
+        const response = await api.get(`/posts/usuario/${id}/paginado`);
+        
+        return response.data.content;
     },
 };
 

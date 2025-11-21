@@ -1,9 +1,11 @@
 import { useFetch } from '../../hooks/useFetch';
 import userService from '../../services/userService';
-import { ListGroup, Spinner, Alert, Image } from 'react-bootstrap';
 import Button from '../common/Button';
 import { getImageUrl } from '../../utils/imageHelper';
+
+import { ListGroup, Spinner, Alert, Image } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const DEFAULT_AVATAR = "https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
 
@@ -68,7 +70,7 @@ export default function Recommendations() {
                         // Toggle
                         return { ...user, seguindo: !user.seguindo };
                     }
-                    return user; 
+                    return user;
                 })
             );
 
@@ -91,23 +93,30 @@ export default function Recommendations() {
                             key={user.id}
                             className="d-flex align-items-center px-0 py-2 border-0 bg-transparent"
                         >
+
                             {/* Avatar (Imagem ou Genérico) */}
                             <div className="me-2">
-                                <Image
-                                    src={user.fotoPerfil ? getImageUrl(user.fotoPerfil) : DEFAULT_AVATAR}
-                                    roundedCircle
-                                    width={40}
-                                    height={40}
-                                    style={{ objectFit: 'cover' }}
-                                    alt={user.nome}
-                                />
+                                <Link to={`/user/${user.id}`}> {/* Link na foto */}
+                                    <Image
+                                        src={user.fotoPerfil ? getImageUrl(user.fotoPerfil) : DEFAULT_AVATAR}
+                                        roundedCircle
+                                        width={40}
+                                        height={40}
+                                        style={{ objectFit: 'cover' }}
+                                        alt={user.nome}
+                                    />
+                                </Link>
                             </div>
 
                             {/* Nome */}
                             <div className="flex-grow-1 overflow-hidden me-2">
-                                <div className="text-truncate fw-bold" style={{ fontSize: '0.9rem' }} title={user.nome}>
-                                    {user.nome}
-                                </div>
+                                <Link to={`/user/${user.id}`}
+                                    className="text-decoration-none text-dark"
+                                > {/* Link no nome */}
+                                    <div className="text-truncate fw-bold" style={{ fontSize: '0.9rem' }} title={user.nome}>
+                                        {user.nome}
+                                    </div>
+                                </Link>
                             </div>
 
                             {/* Botão de Toggle */}

@@ -21,6 +21,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Login from "./pages/Login.jsx";
 import Profile from "./pages/Profile.jsx";
 import Register from "./pages/Register.jsx";
+import UserProfile from './pages/UserProfile.jsx';
 
 //Layout e seguranca
 import AppLayout from './AppLayout';
@@ -52,6 +53,15 @@ const router = createBrowserRouter([
         ),
       },
 
+      {
+        path: 'user/:id', // Rota dinâmica pra visitar perfis de users
+        element: (
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        ),
+      },
+
       // Rotas Públicas que compartilham o mesmo layout
       {
         path: 'login',
@@ -63,8 +73,9 @@ const router = createBrowserRouter([
       },
     ],
   },
-  // Você pode adicionar aqui rotas que REALMENTE não devem ter layout nenhum,
-  // como uma página 404 personalizada, por exemplo.
+
+  // TODO: adicionar aqui rotas que REALMENTE não devem ter layout nenhum,
+  // e.g. 404 pg
   // { path: '*', element: <NotFoundPage /> }
 ]);
 
