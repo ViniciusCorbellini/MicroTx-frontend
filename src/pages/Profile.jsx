@@ -1,18 +1,91 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
+
 import { useAuth } from '../context/AuthContext';
 import { getImageUrl } from '../utils/imageHelper';
 import Button from '../components/common/Button';
 import { useNavigate } from 'react-router-dom';
 import EditProfileModal from '../components/profile/EditProfileModal';
+import CreatePostForm from '../components/forms/CreatePostForm';
+import PostCard from '../components/common/PostCard';
+import EditPostModal from '../components/profile/EditPostModal';
+import postService from '../services/postService';
 
 export default function Profile() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
 
+    // states pra posts
+    const [myPosts, setMyPosts] = useState([]);
+    const [loadingPosts, setLoadingPosts] = useState(true);
+
+    // states pra edição de posts
+    const [editingPost, setEditingPost] = useState(null);
+    const [showEditPostModal, setShowEditPostModal] = useState(false);
+
     const handleLogout = () => {
         logout();
         navigate('/login');
+    };
+
+    // use effect pra carregar os posts ao entrar
+    useEffect(() => {
+        if (user) {
+            loadMyPosts();
+        }
+    }, [user]);
+
+    const loadMyPosts = async () => {
+        try {
+            // Pega página 0, tamanho 20 (exemplo)
+            const data = await postService.getUserPostsPaginated(user.id, 0, 20);
+            // A API retorna Page, pegamos o content
+            setMyPosts(data.content || []);
+        } catch (error) {
+            console.error("Erro ao carregar posts", error);
+        } finally {
+            setLoadingPosts(false);
+        }
+    };
+
+    // Adicionar novo no topo da lista de posts do user
+    const handlePostCreated = (newPost) => {
+        // O post criado não vem com os dados do usuário populados (nome, foto), 
+        // então injetamos manualmente para exibir na hora sem recarregar tudo
+        const postWithUser = {
+            ...newPost,
+            nomeUsuario: user.nome,
+            usuarioId: user.id,
+            fotoPerfil: user.fotoPerfil
+        };
+        setMyPosts([postWithUser, ...myPosts]);
+    };
+
+    // Preparar para editar
+    const handleEditClick = (post) => {
+        setEditingPost(post);
+        setShowEditPostModal(true);
+    };
+
+    // Atualizar post na lista após edição
+    const handlePostUpdated = (updatedPost) => {
+        setMyPosts(prevPosts =>
+            prevPosts.map(p => p.id === updatedPost.id ? updatedPost : p)
+        );
+    };
+
+    // Deletar post da lista
+    const handleDeleteClick = async (postId) => {
+        if (window.confirm("Tem certeza que deseja excluir este post?")) {
+            try {
+                await postService.deletePost(postId);
+                // Remove da lista visualmente
+                setMyPosts(prevPosts => prevPosts.filter(p => p.id !== postId));
+            } catch (error) {
+                alert("Erro ao excluir.");
+            }
+        }
     };
 
     if (!user) return <p>Carregando...</p>;
@@ -24,7 +97,7 @@ export default function Profile() {
 
                     {/* Card do Perfil estilo Protótipo */}
                     <div className="card shadow-sm border-0" style={{ borderRadius: '15px', backgroundColor: '#fdfdf5' }}> {/* Cor do fundo do seu desenho */}
-                        <div className="card-body text-center p-5">
+                        <div className="card-body text-center p-5 mb-6">
 
                             {/* Pfp */}
                             <div className="mb-4 position-relative d-inline-block">
@@ -43,7 +116,7 @@ export default function Profile() {
 
                             {/* Info Cadastrais */}
                             <div className="bg-white p-4 rounded-3 shadow-sm mb-4 text-start">
-                                <h5 className="mb-3 text-secondary border-bottom pb-2">Info Cadastrais</h5>
+                                <h5 className="mb-3 text-secondary border-bottom pb-2">Informações Cadastrais</h5>
 
                                 <div className="mb-3">
                                     <label className="small text-muted fw-bold">NOME</label>
@@ -69,10 +142,39 @@ export default function Profile() {
                         </div>
                     </div>
 
+                    {/* Criação de post */}
+                    <CreatePostForm onPostCreated={handlePostCreated} />
+
+                    {/* Lista de posts do usuário */}
+                    <h5 className="mb-3 text-secondary">Minhas Publicações</h5>
+
+                    {loadingPosts ? (
+                        <div className="text-center"><div className="spinner-border text-secondary"></div></div>
+                    ) : (
+                        myPosts.length > 0 ? (
+                            myPosts.map(post => (
+                                <PostCard
+                                    key={post.id}
+                                    post={post}
+                                    onEdit={handleEditClick}
+                                    onDelete={handleDeleteClick}
+                                />
+                            ))
+                        ) : (
+                            <p className="text-center text-muted">Você ainda não publicou nada.</p>
+                        )
+                    )}
                 </div>
             </div>
 
             <EditProfileModal show={showModal} onHide={() => setShowModal(false)} />
+
+            <EditPostModal
+                show={showEditPostModal}
+                onHide={() => setShowEditPostModal(false)}
+                post={editingPost}
+                onUpdate={handlePostUpdated}
+            />
         </div>
     );
 }

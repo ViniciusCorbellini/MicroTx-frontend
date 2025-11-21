@@ -32,7 +32,6 @@ export default function LoginForm() {
         try {
             //faz a chamada a API do backend
             const data = await authService.login(formData.email, formData.senha);
-
             login(data);
 
             // Redireciona para o Dashboard

@@ -21,20 +21,14 @@ export const AuthProvider = ({ children }) => {
 				const token = localStorage.getItem('token');
 
 				if (!userJSON || !token) {
-					console.log("AuthContext: Sem usuário ou token no storage. Nada a fazer.");
 					return;
 				}
 
-				console.log("AuthContext: Encontrou user e token. Validando...");
-
 				const isValid = await authService.validate();
-
-				console.log("AuthContext: Resultado da validação:", isValid);
 
 				if (isValid) {
 					setUser(JSON.parse(userJSON));
 					setIsAuthenticated(true);
-					console.log("AuthContext: Usuário validado e carregado com sucesso.");
 				} else {
 					// Se 'validate' retornar 'false' (token expirado/inválido), limpa-se o storage
 					console.log("AuthContext: Validação falhou (token inválido). Limpando storage.");

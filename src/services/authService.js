@@ -25,22 +25,14 @@ const authService = {
 
     validate: async () => {
         try {
-            // LEIA O TOKEN AQUI PRIMEIRO
             const token = localStorage.getItem('token');
 
-            // Se não há token, não há nada para validar.
-            // Retorne 'false' silenciosamente ou lance um erro específico.
             if (!token) {
                 console.log("AuthService: Sem token no storage, validação cancelada.");
                 return false;
             }
-
-            // Só agora, com um token, faça a chamada
-            console.log("AuthService: Token encontrado, enviando para /auth/validate");
-            const response = await api.get('/auth/validate'); // O interceptor agora vai funcionar
-
+            const response = await api.get('/auth/validate');
             return response.status === 200;
-
         } catch (error) {
             console.log(error);
             // Se o erro for 403 ou 401, o token é inválido
@@ -50,8 +42,7 @@ const authService = {
             }
             throw error.response?.data || new Error('Erro ao validar token jwt');
         }
-    }
-
+    },
 }
 
 export default authService;

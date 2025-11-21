@@ -1,14 +1,21 @@
 import React from 'react';
 import { Card, Image } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Certifique-se de ter este import
-import { getImageUrl } from '../../utils/imageHelper';
+import { Link } from 'react-router-dom'; 
+import { Dropdown } from 'react-bootstrap';
 
-export default function PostCard({ post }) {
+import { getImageUrl } from '../../utils/imageHelper';
+import { useAuth } from '../../context/AuthContext';
+
+export default function PostCard({ post, onEdit, onDelete }) {
+    const { user } = useAuth();
+
     const authorName = post.nomeUsuario || "Usuário Desconhecido";
-    
+
     const avatarSrc = getImageUrl(post.fotoPerfil)
 
     const profileLink = post.usuarioId ? `/user/${post.usuarioId}` : '#';
+
+    const isOwner = user && (post.usuarioId === user.id);
 
     return (
         <Card className="mb-3 shadow-sm border-0">
@@ -40,6 +47,20 @@ export default function PostCard({ post }) {
                             {new Date(post.dataCriacao).toLocaleDateString()}
                         </small>
                     </div>
+
+                    {isOwner && (
+                        <Dropdown align="end">
+                            <Dropdown.Toggle variant="link" className="text-muted p-0 border-0 no-caret">
+                                <i className="bi bi-three-dots-vertical"></i> {/* Ícone de 3 pontos */}
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => onEdit(post)}>Editar</Dropdown.Item>
+                                <Dropdown.Item onClick={() => onDelete(post.id)} className="text-danger">Excluir</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    )}
+
                 </div>
 
                 <Card.Text>
