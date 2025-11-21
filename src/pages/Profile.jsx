@@ -10,6 +10,7 @@ import CreatePostForm from '../components/forms/CreatePostForm';
 import PostCard from '../components/common/PostCard';
 import EditPostModal from '../components/profile/EditPostModal';
 import postService from '../services/postService';
+import userService from '../services/userService';
 
 export default function Profile() {
     const { user, logout } = useAuth();
@@ -29,9 +30,29 @@ export default function Profile() {
         navigate('/login');
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
+        // Confirmação de Segurança
+        const confirm = window.confirm("Tem certeza absoluta? Esta ação apagará sua conta e todos os seus posts permanentemente.");
 
-        navigate('/login');
+        if (confirm) {
+            try {
+
+                await userService.deleteUser();
+
+                logout();
+
+                // Mostra uma mensagem no navegador e redireciona para o cadastro
+                alert("Sua conta foi excluída.");
+                
+                // força o redirecionamento para o cadastro
+                // Isso impede que o ProtectedRoute interfira mandando para o login
+                window.location.href = '/register';
+
+            } catch (error) {
+                console.error("Erro ao deletar usuário", error);
+                alert("Ocorreu um erro ao tentar excluir a conta.");
+            }
+        }
     };
 
     // use effect pra carregar os posts ao entrar
@@ -50,8 +71,8 @@ export default function Profile() {
             // Injetando as infos do usuário logado em cada post
             const postsWithUserData = content.map(post => ({
                 ...post,
-                
-                // Injeta os dados que faltam para o PostCard funcionar bonito
+
+                // Injeta os dados que faltam para o PostCard funcionar
                 nomeUsuario: user.nome,
                 fotoPerfil: user.fotoPerfil,
                 usuarioId: user.id // Garante que o isOwner funcione
@@ -145,7 +166,7 @@ export default function Profile() {
                                 </div>
                             </div>
 
-                            {/* Botões do Footer (Alterar e Sair) */}
+                            {/* Botões do Footer (Alterar, sair e deletar) */}
                             <div className="d-flex justify-content-between gap-3">
                                 <Button variant="outline-secondary" onClick={() => setShowModal(true)}>
                                     Alterar
@@ -153,8 +174,7 @@ export default function Profile() {
                                 <Button variant="outline-danger" onClick={handleLogout}>
                                     Sair
                                 </Button>
-
-                                <Button variant="outline-danger" onClick={handleLogout}>
+                                <Button variant="outline-danger" onClick={handleDelete}>
                                     Deletar perfil
                                 </Button>
                             </div>
