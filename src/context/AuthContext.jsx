@@ -82,6 +82,14 @@ export const AuthProvider = ({ children }) => {
 		setIsAuthenticated(false);
 	};
 
+	// funcao pra deletar a conta do user
+	const deleteUser = () => {
+		localStorage.removeItem('user');
+		localStorage.removeItem('token');
+		setUser(null);
+		setIsAuthenticated(false);
+	};
+
 	const value = {
 		user,
 		isAuthenticated,

@@ -29,6 +29,11 @@ export default function Profile() {
         navigate('/login');
     };
 
+    const handleDelete = () => {
+
+        navigate('/login');
+    };
+
     // use effect pra carregar os posts ao entrar
     useEffect(() => {
         if (user) {
@@ -38,10 +43,21 @@ export default function Profile() {
 
     const loadMyPosts = async () => {
         try {
-            // Pega página 0, tamanho 20 (exemplo)
+            setLoadingPosts(true);
             const data = await postService.getUserPostsPaginated(user.id, 0, 20);
-            // A API retorna Page, pegamos o content
-            setMyPosts(data.content || []);
+            const content = data.content || [];
+
+            // Injetando as infos do usuário logado em cada post
+            const postsWithUserData = content.map(post => ({
+                ...post,
+                
+                // Injeta os dados que faltam para o PostCard funcionar bonito
+                nomeUsuario: user.nome,
+                fotoPerfil: user.fotoPerfil,
+                usuarioId: user.id // Garante que o isOwner funcione
+            }));
+
+            setMyPosts(postsWithUserData);
         } catch (error) {
             console.error("Erro ao carregar posts", error);
         } finally {
@@ -136,6 +152,10 @@ export default function Profile() {
                                 </Button>
                                 <Button variant="outline-danger" onClick={handleLogout}>
                                     Sair
+                                </Button>
+
+                                <Button variant="outline-danger" onClick={handleLogout}>
+                                    Deletar perfil
                                 </Button>
                             </div>
 

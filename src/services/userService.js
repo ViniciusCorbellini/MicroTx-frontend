@@ -38,7 +38,7 @@ const userService = {
         // (diz ao spring que essa parte da req tem o tipo application/json)
         const jsonBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
         formData.append('usuario', jsonBlob);
-
+        
         // Parte da Imagem 
         // (a chave dessa parte da req é 'imagem')
         if (file) {

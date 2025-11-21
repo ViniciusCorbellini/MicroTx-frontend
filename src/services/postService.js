@@ -43,6 +43,7 @@ const postService = {
         const response = await api.get(`/posts/usuario/${userId}/paginado`, {
             params: { page, size }
         });
+        console.log(response.data)
         return response.data; // Retorna o objeto Page (content, totalPages, etc)
     },
 

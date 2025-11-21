@@ -25,7 +25,7 @@ export default function UserProfile() {
                 const [userResponse, postsResponse, followingResponse] = await Promise.all([
                     userService.getUserById(id),
                     userService.getUserPosts(id),
-                    userService.isFollowing(id) // endpoint corrigido no passo anterior
+                    userService.isFollowing(id)
                 ]);
 
                 setProfile(userResponse);
@@ -113,14 +113,6 @@ export default function UserProfile() {
                     posts.map(post => (
                         <Col md={4} key={post.id} className="mb-4">
                             <Card className="h-100 shadow-sm border-0 overflow-hidden">
-                                {/* Assumindo que o post tem uma 'imagemUrl' ou 'conteudo'
-                                {post.imagemUrl && (
-                                    <Card.Img
-                                        variant="top"
-                                        src={getImageUrl(post.imagemUrl)}
-                                        style={{ height: '200px', objectFit: 'cover' }}
-                                    />
-                                )} */}
                                 <Card.Body>
                                     <Card.Text className="small text-muted">
                                         {/* Texto do post */}
