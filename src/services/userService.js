@@ -53,21 +53,53 @@ const userService = {
         } catch (error) {
             throw error.response?.data || new Error('Erro ao atualizar perfil');
         }
-    }
+    },
 
     /**
-     *  Para buscar dados do perfil do usuário logado.
+     * Segue um usuário
+     * Retorna os dados atualizados da relação de seguidor
      */
-    //   getMyProfile: async () => {
-    //     try {
-    //       const response = await api.get('/users/me'); // TODO
-    //       return response.data;
-    //     } catch (error) {
-    //       throw error.response?.data || new Error('Erro ao buscar perfil');
-    //     }
-    //   },
+    followUser: async (seguidoId) => {
+        try {
+            // null para o body
+            const response = await api.post(`/seguidores/seguir`, null, {
+                params: {seguidoId}
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error('Erro ao seguir usuário');
+        }
+    },
 
-    // TODO outras funções (seguir usuário, atualizar perfil...)
+    /**
+     * Segue um usuário
+     * Retorna os dados atualizados da relação de seguidor
+     */
+    unfollowUser: async (seguidoId) => {
+        try {
+            const response = await api.delete(`/seguidores/deixar-de-seguir`, {
+                params: {seguidoId}
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error('Erro ao seguir usuário');
+        }
+    },
+
+    /**
+     * Verifica se o usuário logado segue um determinado usuário.
+     */
+    isFollowing: async (seguidoId) => {
+        try {
+            const response = await api.get('/seguidores/is-seguindo', {
+                params: { seguidoId }
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`Erro ao verificar status de seguidor para id ${seguidoId}`, error);
+            return false; // Em caso de erro, assumirei que o user não segue
+        }
+    },
 };
 
 export default userService;
