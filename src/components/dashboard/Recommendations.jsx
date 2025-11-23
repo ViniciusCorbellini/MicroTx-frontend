@@ -83,7 +83,10 @@ export default function Recommendations() {
     if (error) return <Alert variant="danger" className="p-2"><small>{error}</small></Alert>;
 
     return (
-        <div className="p-3 bg-light rounded shadow-sm">
+        <div
+            className="p-3 bg-light rounded shadow-sm"
+            style={{ position: 'sticky', top: '20px' }}
+        >
             <h6 className="mb-3 fw-bold text-secondary">Sugestões para você</h6>
 
             <ListGroup variant="flush" className="bg-transparent">
