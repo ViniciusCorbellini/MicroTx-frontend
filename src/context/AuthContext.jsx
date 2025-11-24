@@ -67,11 +67,18 @@ export const AuthProvider = ({ children }) => {
 	};
 
 	const updateUser = (newUserData) => {
-		// Atualiza o estado do user
-		setUser(prev => ({ ...prev, ...newUserData }));
+		// Recupera o usuário atual COMPLETO que já está salvo (com ID e Token)
+		const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-		// Atualiza o usuario no localStorage 
-		localStorage.setItem('user', JSON.stringify(newUserData));
+		// Mescla um novo objeto com as propriedades do antigo
+		// O 'newUserData' vai sobrescrever apenas nome, email e foto. O ID será mantido.
+		const mergedUser = { ...currentUser, ...newUserData };
+
+		// Atualiza o Estado do user
+		setUser(mergedUser);
+
+		// Atualiza o LocalStorage com o objeto novo
+		localStorage.setItem('user', JSON.stringify(mergedUser));
 	};
 
 	// Função de logout
