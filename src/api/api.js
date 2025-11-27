@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Definindo a url do back
-const API_URL = import.meta.env.VITE_BACKEND_SERVER_URL;
+const API_URL = import.meta.env.VITE_BACKEND_SERVER_URL || 'http://localhost:8080';
 
 const api = axios.create({
     baseURL: API_URL,

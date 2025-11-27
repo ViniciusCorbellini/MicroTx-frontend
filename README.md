@@ -234,52 +234,56 @@ WHERE s.seguido_id = 1;
 
 ## 10) Instalação e Execução
 
-### 10.1 Dependências
-Antes de rodar, certifique-se de ter instalado:
-- **Java 21+**
-- **Maven**
-- **PostgreSQL** (se não usar Docker)
-- **Git**
-- **Docker** (Opcional)
+### Pré-requisitos
 
-### 10.2 Clonar o repositório
-```bash
-git clone https://github.com/ViniciusCorbellini/spa-web-backend.git
-cd spa-web-backend
-```
+Certifique-se de ter instalado em sua máquina:
+* [Node.js](https://nodejs.org/) (versão 18 ou superior recomendada)
+* [Git](https://git-scm.com/)
 
-### 10.3 Banco de dados
-Crie o banco no PostgreSQL:
-```bash
-CREATE DATABASE dev_web;
-```
-> Usuário e senha devem estar configurados no .env com base no .env.example na raiz do repositório
+### 🔧 Instalação
 
-### 10.4 Backend
+1.  **Clone o repositório:**
 
-#### 10.4.1 Build do projeto
-Compila, roda os testes e gera o pacote `.jar`:
-```bash
-.\mvnw clean install
-```
+    ```bash
+    git clone [https://github.com/ViniciusCorbellini/MicroTx-frontend.git](https://github.com/ViniciusCorbellini/MicroTx-frontend.git)
+    cd MicroTx-frontend
+    ```
 
-#### 10.4.2 Executar a aplicação
-Rodar com spring boot
-```bash
-.\mvnw spring-boot:run
-```
+2.  **Instale as dependências:**
 
-#### Usando docker:
-Certifique-se de estar na raíz do projeto, onde estão localizados o Dockerfile e o docker-compose, e rode no terminal
-```bash
-docker compose up --build
-```
+    ```bash
+    npm install
+    ```
 
-### 10.5 Documentação 
-Se tudo ocorrer corretamente, você poderá acessar a documentação da api em 
-```
-http://localhost:8080/swagger-ui.html
-```
+### ⚙️ Configuração de Ambiente
+
+Para que o Frontend se comunique com o Backend, você precisa configurar a URL da API.
+
+1.  Na raiz do projeto, crie um arquivo chamado `.env`.
+2.  Adicione a seguinte variável dentro dele:
+
+    ```env
+    # Se o seu backend estiver rodando localmente:
+    VITE_API_URL=http://localhost:8080
+    
+    # OU, se quiser conectar direto com o backend na nuvem:
+    # VITE_API_URL=[https://microtx-backend.onrender.com](https://microtx-backend.onrender.com)
+    ```
+
+> **Nota:** Se você não criar este arquivo, a aplicação tentará conectar por padrão em `http://localhost:8080` ou usará a configuração que você definir no `src/services/api.js`.
+
+### ⚡ Executando a Aplicação
+
+1.  **Inicie o servidor de desenvolvimento:**
+
+    ```bash
+    npm run dev
+    ```
+
+2.  **Acesse no navegador:**
+
+    O terminal mostrará o endereço local, geralmente:
+    [http://localhost:5173](http://localhost:5173)
 
 ## Agradecimentos
 Obrigado por dedicar seu tempo para conhecer este projeto.  
