@@ -53,13 +53,13 @@ Critérios de aceite:
 ## 8) Tecnologias
 
 ### 8.1 Navegador
-- **Armazenamento local:** LocalStorage (para tokesn JWT)
+- **Armazenamento local:** LocalStorage (para tokens JWT)
 
 ### 8.2 Front-end 
-**Front-end (servidor):** React e Vite
+**Front-end (servidor):** React e Vite  
 **Hospedagem:** Github Pages
 
-### 8.3 Back-end (API/servidor, se existir)
+### 8.3 Back-end
 - **Back-end (API):** Spring Boot (Java 21)
 - **Banco de dados:** PostgreSQL (uma instância em render - para dados gerais - e outra em supabase - para armazenamento de fotos)
 - **Acesso ao BD:** Spring Data JPA (Hibernate)
@@ -230,7 +230,7 @@ WHERE s.seguido_id = 1;
 ```
 > Obs: Esse exemplo de criação das tabelas não reflete plenamente o estado da DATABASE. 
 > Se você deseja analisar com mais profundidade funções, SPs e INDEXes, leia as migrations 
-> e seeds em src/main/resources/db/changelog/
+> e seeds em src/main/resources/db/changelog/ no repositório do backend [https://github.com/ViniciusCorbellini/spa-web-backend.git](https://github.com/ViniciusCorbellini/spa-web-backend.git)
 
 ## 10) Instalação e Execução
 
@@ -270,7 +270,7 @@ Para que o Frontend se comunique com o Backend, você precisa configurar a URL d
     # VITE_API_URL=[https://microtx-backend.onrender.com](https://microtx-backend.onrender.com)
     ```
 
-> **Nota:** Se você não criar este arquivo, a aplicação tentará conectar por padrão em `http://localhost:8080` ou usará a configuração que você definir no `src/services/api.js`.
+> **Nota:** Se você não criar este arquivo, a aplicação tentará conectar por padrão em `http://localhost:8080` ou usará a configuração que você definir no `src/api/api.js`.
 
 ### ⚡ Executando a Aplicação
 
