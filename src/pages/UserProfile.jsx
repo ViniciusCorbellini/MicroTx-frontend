@@ -7,6 +7,15 @@ import { getImageUrl } from '../utils/imageHelper';
 import Button from '../components/common/Button';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * Perfil Público de Usuário.
+ *
+ * @component
+ * @description
+ * Exibe as informações e postagens de um usuário específico acessado via URL (`/user/:id`).
+ * Diferente do `Profile.jsx` (que é o painel de administração da conta), este componente
+ * é focado na visualização pública e interações sociais, como o botão de "Seguir".
+ */
 export default function UserProfile() {
     const { id } = useParams(); // Pega o ID da URL (ex: /user/12 -> id = 12)
     const { user: currentUser } = useAuth(); // Usuário logado (para não seguir a si mesmo)
@@ -16,7 +25,17 @@ export default function UserProfile() {
     const [isFollowing, setIsFollowing] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    // Carrega tudo ao entrar na página
+    /**
+     * Carregamento de Dados Paralelo.
+     *
+     * @description
+     * Utiliza `Promise.all` para disparar três requisições simultâneas ao backend:
+     * 1. Dados do perfil (Nome, contadores, foto).
+     * 2. Lista de postagens do usuário.
+     * 3. Status do relacionamento (se o usuário logado já segue este perfil).
+     *
+     * Essa abordagem evita o "waterfall" (uma requisição esperando a outra), acelerando a renderização.
+     */
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -41,7 +60,13 @@ export default function UserProfile() {
         if (id) loadData();
     }, [id]);
 
-    // Lógica de Seguir/Unfollow (reaproveitada)
+    /**
+     * Gerencia a ação de Seguir/Deixar de Seguir (Toggle).
+     *
+     * @description
+     * 1. Verifica o estado atual (`isFollowing`) para chamar o endpoint correto (`unfollow` vs `follow`).
+     * 2. Atualiza o estado visual (`setIsFollowing`) imediatamente após o sucesso da requisição.
+     */
     const handleToggleFollow = async () => {
         try {
             if (isFollowing) {
@@ -58,7 +83,11 @@ export default function UserProfile() {
     if (loading) return <div className="text-center mt-5"><Spinner animation="border" /></div>;
     if (!profile) return <p className="text-center mt-5">Usuário não encontrado.</p>;
 
-    const isMe = currentUser?.id === Number(id); // Verifica se é o próprio usuário
+    /**
+     * Verifica se o perfil visitado pertence ao próprio usuário logado.
+     * Usado para ocultar o botão "Seguir" (ninguém segue a si mesmo).
+     */
+    const isMe = currentUser?.id === Number(id);
 
     return (
         <Container className="mt-4">

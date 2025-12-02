@@ -13,6 +13,15 @@ import PostCard from '../components/common/PostCard';
 import postService from '../services/postService';
 import userService from '../services/userService';
 
+/**
+ * Painel Principal (Feed).
+ *
+ * @description
+ * Componente central da aplicação que gerencia:
+ * 1. **Scroll Infinito:** Carregamento progressivo de posts ao rolar a página.
+ * 2. **Busca Híbrida:** Alternância dinâmica entre buscar Posts ou Usuários.
+ * 3. **Layout Responsivo:** Gerencia as colunas laterais (Recomendações/Citações) que somem em telas menores.
+ */
 export default function Dashboard() {
 	// Estados da Busca
 	const [searchQuery, setSearchQuery] = useState('');
@@ -32,7 +41,11 @@ export default function Dashboard() {
 		loadFeed(0); // Força página 0
 	}, []);
 
-	// Detector de scroll pra paginar os posts
+	/**
+     * Listener de Scroll para Paginação.
+     * Dispara `loadFeed` quando o usuário chega a 200px do fim da página.
+     * Só executa se não houver busca ativa e não estiver carregando.
+     */
 	useEffect(() => {
 		const handleScroll = () => {
 			// Verifica se chegou perto do fim da página (deslocamento de 200px)
@@ -51,9 +64,14 @@ export default function Dashboard() {
 	}, [loading, hasMore, searchQuery, page]);
 
 	/**
-	 * Carrega o feed.
-	 * @param {number} pageNumber - Número da página a buscar
-	 */
+     * Busca dados do feed no backend.
+     *
+     * @param {number} pageNumber - Índice da página a ser buscada (começa em 0).
+     * @description
+     * - Se `pageNumber === 0`: Substitui a lista atual (Refresh/Primeira carga).
+     * - Se `pageNumber > 0`: Adiciona (concatena) os novos itens ao final da lista existente.
+     * - Atualiza `hasMore` verificando se a página atual é a última (`data.last`).
+     */
 	const loadFeed = async (pageNumber) => {
 		setLoading(true);
 		try {
@@ -80,6 +98,16 @@ export default function Dashboard() {
 		}
 	};
 
+	/**
+     * Controlador da barra de busca.
+     *
+     * @param {string} query - O termo digitado pelo usuário.
+     * @param {'posts'|'users'} type - O tipo de entidade a buscar.
+     * @description
+     * 1. Reseta a paginação (setPage 0) e desativa o scroll infinito temporariamente.
+     * 2. Se `query` for vazia, restaura o feed original.
+     * 3. Decide qual serviço chamar (`postService` ou `userService`) baseado no `type`.
+     */
 	const handleSearch = async (query, type) => {
 		setSearchQuery(query);
 		setSearchType(type);

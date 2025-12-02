@@ -2,11 +2,30 @@ import { useState, useEffect } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import postService from '../../services/postService';
 
+
+/**
+ * Modal para edição de conteúdo de uma publicação existente.
+ *
+ * @component
+ * @description
+ * Exibe um campo de texto pré-preenchido com o conteúdo atual do post.
+ * Ao salvar, chama a API e notifica o componente pai para atualizar a lista localmente.
+ *
+ * @param {Object} props
+ * @param {boolean} props.show - Controla a visibilidade do modal.
+ * @param {function} props.onHide - Função para fechar o modal.
+ * @param {Object} props.post - O objeto do post original a ser editado.
+ * @param {function(Object): void} props.onUpdate - Callback executado após o sucesso da edição.
+ * Recebe o objeto do post atualizado para que a UI reflita a mudança imediatamente.
+ */
 export default function EditPostModal({ show, onHide, post, onUpdate }) {
     const [texto, setTexto] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Carrega o texto do post quando o modal abre
+    /**
+     * Sincroniza o estado local do formulário sempre que o post selecionado muda.
+     * Isso garante que o input não exiba dados de um post anterior ao abrir o modal.
+     */
     useEffect(() => {
         if (post) setTexto(post.texto);
     }, [post]);

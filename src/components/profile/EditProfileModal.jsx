@@ -5,6 +5,19 @@ import InputField from '../common/InputField';
 import userService from '../../services/userService';
 import { useAuth } from '../../context/AuthContext';
 
+/**
+ * Modal de Edição de Perfil do Usuário.
+ *
+ * @component
+ * @description
+ * Permite ao usuário logado alterar seus dados cadastrais (Nome, Email, Senha) e Foto.
+ *
+ * Fluxo de funcionamento:
+ * 1. **Carga Inicial:** Preenche o formulário com os dados do `AuthContext`.
+ * 2. **Preview de Imagem:** Gera uma URL temporária (`URL.createObjectURL`) ao selecionar um arquivo.
+ * 3. **Envio:** Constrói um `FormData` para enviar texto e arquivo (multipart) ao backend.
+ * 4. **Sincronização:** Em caso de sucesso, atualiza o `localStorage` e o Contexto via `updateUser`.
+ */
 export default function EditProfileModal({ show, onHide }) {
     const { user, updateUser } = useAuth();
     const [loading, setLoading] = useState(false);
@@ -109,6 +122,7 @@ export default function EditProfileModal({ show, onHide }) {
                         placeholder="Deixe em branco para manter a atual"
                     />
 
+                    {/* Submit */}
                     <div className="d-flex justify-content-end gap-2 mt-4">
                         <Button variant="secondary" onClick={onHide} type="button">Cancelar</Button>
                         <Button type="submit" disabled={loading}>

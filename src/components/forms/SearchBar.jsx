@@ -1,7 +1,20 @@
 import { useState } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 
-// Recebe props para passar os dados para cima (para o Dashboard)
+/**
+ * Barra de Busca com Filtro de Categoria.
+ *
+ * @component
+ * @description
+ * Componente de UI que combina um campo de texto e um seletor de tipo (Posts vs Pessoas).
+ * Não executa a lógica de filtro diretamente; apenas captura a intenção do usuário
+ * e repassa para o componente pai via callback.
+ *
+ * @param {Object} props
+ * @param {function(string, string): void} props.onSearch - Callback disparado no submit.
+ * Assinatura: `(termoBusca, tipoBusca) => void`.
+ * Exemplo: `onSearch("java", "posts")`
+ */
 export default function SearchBar({ onSearch }) {
     const [query, setQuery] = useState('');
     const [type, setType] = useState('posts'); // 'posts' ou 'users'

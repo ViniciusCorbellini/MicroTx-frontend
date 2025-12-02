@@ -9,10 +9,36 @@ import { Link } from 'react-router-dom';
 
 const DEFAULT_AVATAR = "https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
 
+/**
+ * Componente de Recomendações (Sidebar).
+ *
+ * @component
+ * @description
+ * Exibe uma lista de usuários sugeridos para seguir.
+ *
+ * Diferente de uma lista estática, este componente possui um ciclo de vida complexo:
+ * 1. Recebe a lista de usuários sugeridos.
+ * 2. Realiza uma verificação assíncrona em paralelo para saber se o usuário logado
+ * já segue algum deles (para exibir o botão correto "Seguir" vs "Seguindo").
+ * 3. Gerencia o estado local de cada item para permitir interação imediata.
+ */
 export default function Recommendations() {
     const { data: initialData, loading, error } = useFetch(userService.getUserRecommendations);
     const [usersList, setUsersList] = useState([]); // fazendo um useState pra armazenar os users pra permitir o seguir/deixar de "
 
+    /**
+     * Inicialização e Verificação de Status de Relacionamento.
+     *
+     * @description
+     * Estratégia de carregamento em duas etapas para melhor UX:
+     * 1. **Renderização Imediata:** Assim que `initialData` chega, preenche a lista assumindo
+     * `seguindo: false` para que o usuário veja os nomes instantaneamente.
+     * 2. **Hidratação Assíncrona:** Dispara requisições em paralelo (`Promise.all`) para verificar
+     * o status real de cada usuário (`isFollowing`).
+     * 3. **Atualização:** Ao final, atualiza o estado `usersList` com os botões corretos.
+     *
+     * Isso evita que a sidebar fique em "Loading..." enquanto verificamos relacionamentos um a um.
+     */
     useEffect(() => {
         const fetchStatuses = async () => {
             if (initialData && initialData.length > 0) {
@@ -48,6 +74,16 @@ export default function Recommendations() {
         fetchStatuses();
     }, [initialData]);
 
+    /**
+     * Alterna o estado de seguir/deixar de seguir de um usuário específico.
+     *
+     * @param {number} targetUserId - O ID do usuário alvo.
+     * @description
+     * 1. Identifica o usuário na lista local.
+     * 2. Chama a API apropriada (`follow` ou `unfollow`) baseada no estado atual.
+     * 3. Atualiza o estado local `usersList` imediatamente após o sucesso,
+     * trocando a cor e o texto do botão.
+     */
     const handleToggleFollow = async (userId) => {
         // Encontrando o user na lista atual para saber o seu status
         const targetUser = usersList.find(user => user.id === userId);

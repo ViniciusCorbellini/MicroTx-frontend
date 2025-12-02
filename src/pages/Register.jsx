@@ -1,6 +1,14 @@
 // src/pages/Register.jsx
 import RegisterForm from '../components/forms/RegisterForm';
 
+/**
+ * Página de Cadastro.
+ *
+ * @component
+ * @description
+ * Wrapper visual para o formulário de registro. Centraliza o componente `<RegisterForm />`
+ * na tela e aplica o layout padrão de formulários.
+ */
 export default function Register() {
   return (
     <div className="form-container">

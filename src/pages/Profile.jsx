@@ -12,6 +12,15 @@ import EditPostModal from '../components/profile/EditPostModal';
 import postService from '../services/postService';
 import userService from '../services/userService';
 
+/**
+ * Tela de Perfil do Usuário.
+ *
+ * @description
+ * Centraliza o gerenciamento da conta e conteúdo do usuário. Permite:
+ * 1. Visualizar dados cadastrais.
+ * 2. Editar perfil ou Excluir a conta permanentemente.
+ * 3. Gerenciar publicações (Criar, Listar, Editar, Deletar).
+ */
 export default function Profile() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
@@ -30,6 +39,18 @@ export default function Profile() {
         navigate('/login');
     };
 
+    /**
+     * Exclui a conta do usuário permanentemente.
+     *
+     * @description
+     * 1. Solicita confirmação via `window.confirm`.
+     * 2. Chama o serviço para deletar o usuário no backend.
+     * 3. Força o logout e redireciona via `window.location.href` (hard reload).
+     *
+     * @note O uso de `window.location.href` em vez de `Maps` é intencional
+     * para garantir que o estado da aplicação seja limpo completamente e evitar
+     * conflitos com rotas protegidas durante o redirecionamento.
+     */
     const handleDelete = async () => {
         // Confirmação de Segurança
         const confirm = window.confirm("Tem certeza absoluta? Esta ação apagará sua conta e todos os seus posts permanentemente.");
@@ -62,6 +83,15 @@ export default function Profile() {
         }
     }, [user]);
 
+    /**
+     * Carrega a lista de posts do usuário logado.
+     *
+     * @description
+     * Busca os posts paginados e injeta manualmente as informações do usuário atual
+     * (nome, foto, id) em cada objeto de post. Isso é necessário para que o
+     * componente `PostCard` renderize o cabeçalho corretamente e habilite
+     * os botões de edição/exclusão (isOwner).
+     */
     const loadMyPosts = async () => {
         try {
             setLoadingPosts(true);
@@ -86,7 +116,15 @@ export default function Profile() {
         }
     };
 
-    // Adicionar novo no topo da lista de posts do user
+    /**
+     * Callback executado após a criação de um novo post com sucesso.
+     *
+     * @param {Object} newPost - O objeto do post retornado pelo backend.
+     * @description
+     * Adiciona o novo post ao topo da lista local (`myPosts`).
+     * Assim como no carregamento, injeta os dados do usuário logado no objeto
+     * para exibição imediata sem necessidade de nova requisição (refresh).
+     */
     const handlePostCreated = (newPost) => {
         // O post criado não vem com os dados do usuário populados (nome, foto), 
         // então injetamos manualmente para exibir na hora sem recarregar tudo
@@ -105,14 +143,21 @@ export default function Profile() {
         setShowEditPostModal(true);
     };
 
-    // Atualizar post na lista após edição
+    /**
+     * Atualiza um post específico na lista após edição.
+     * Substitui o objeto antigo pelo atualizado mantendo a ordem da lista.
+     * @param {Object} updatedPost - O objeto do post já modificado.
+     */
     const handlePostUpdated = (updatedPost) => {
         setMyPosts(prevPosts =>
             prevPosts.map(p => p.id === updatedPost.id ? updatedPost : p)
         );
     };
 
-    // Deletar post da lista
+    /**
+     * Remove um post da lista visual após exclusão confirmada na API.
+     * @param {number} postId - ID do post a ser removido.
+     */
     const handleDeleteClick = async (postId) => {
         if (window.confirm("Tem certeza que deseja excluir este post?")) {
             try {

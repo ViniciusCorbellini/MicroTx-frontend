@@ -10,6 +10,20 @@ import authService from '../../services/authService';
 
 import styles from '../../styles/forms.module.css';
 
+/**
+ * Formulário de Autenticação.
+ *
+ * @component
+ * @description
+ * Gerencia a entrada de credenciais e o fluxo de login:
+ * 1. Coleta email e senha.
+ * 2. Chama o `authService` para validar no backend.
+ * 3. Em caso de sucesso: Atualiza o estado global via `AuthContext` e redireciona para a Home.
+ * 4. Em caso de erro: Exibe mensagem de feedback visual ao usuário.
+ *
+ * @note Este componente utiliza o `useAuth` para injetar o token no sistema e o `useNavigate`
+ * para redirecionamento.
+ */
 export default function LoginForm() {
     const [formData, setFormData] = useState({
         email: '',

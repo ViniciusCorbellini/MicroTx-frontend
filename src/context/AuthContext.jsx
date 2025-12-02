@@ -50,7 +50,10 @@ export const AuthProvider = ({ children }) => {
 		loadUserFromStorage();
 	}, []); // O array vazio [] garante que isso rode só na montagem
 
-	// Função de login
+	/**
+     * Efetua o login no contexto, salvando token e usuário no LocalStorage.
+     * @param {Object} data - Resposta da API contendo token e dados do usuário.
+     */
 	const login = (data) => {
 		const userToStore = {
 			id: data.id,
@@ -66,6 +69,11 @@ export const AuthProvider = ({ children }) => {
 		setIsAuthenticated(true);
 	};
 
+	/**
+     * Atualiza parcialmente os dados do usuário logado (ex: trocar foto ou nome).
+     * Mantém o ID e Token inalterados.
+     * @param {Partial<User>} newUserData - Objeto com os campos a serem atualizados.
+     */
 	const updateUser = (newUserData) => {
 		// Recupera o usuário atual COMPLETO que já está salvo (com ID e Token)
 		const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -81,7 +89,9 @@ export const AuthProvider = ({ children }) => {
 		localStorage.setItem('user', JSON.stringify(mergedUser));
 	};
 
-	// Função de logout
+	/**
+     * remove as informações do localstorage e atualiza o contexto
+     */
 	const logout = () => {
 		localStorage.removeItem('user');
 		localStorage.removeItem('token');
@@ -89,6 +99,7 @@ export const AuthProvider = ({ children }) => {
 		setIsAuthenticated(false);
 	};
 
+	// Valor de retorno do hook
 	const value = {
 		user,
 		isAuthenticated,
@@ -101,7 +112,13 @@ export const AuthProvider = ({ children }) => {
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// useAuth: É um hook que nos dará acesso fácil a user, isAuthenticated, login e logout em qualquer componente.
+/**
+ * Hook personalizado para acessar o contexto de autenticação.
+ * Garante que o hook seja usado apenas dentro de um AuthProvider.
+ *
+ * @returns {AuthContext} O valor do contexto (user, login, logout, etc).
+ * @throws {Error} Se for usado fora do escopo do AuthProvider.
+ */
 export const useAuth = () => {
 	const context = useContext(AuthContext);
 	if (!context) {
