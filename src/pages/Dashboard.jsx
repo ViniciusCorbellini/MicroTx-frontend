@@ -50,6 +50,7 @@ export default function Dashboard() {
 		const handleScroll = () => {
 			// Verifica se chegou perto do fim da página (deslocamento de 200px)
 			if (
+				// Altura da janela visível + distância até o topo da página >= altura total - 200 px
 				window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 200 &&
 				!loading &&
 				hasMore &&
